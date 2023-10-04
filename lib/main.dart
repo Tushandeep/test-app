@@ -82,6 +82,7 @@ class HomePage extends StatelessWidget {
     final AppController controller = AppController.instance;
 
     return Scaffold(
+      backgroundColor: Colors.blue,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -102,15 +103,15 @@ class HomePage extends StatelessWidget {
                 color: Colors.red,
               ),
             ),
-            // const SizedBox(height: 20),
-            // const Text(
-            //   "Hello from Tushandeep. This should be version = v0.1.1",
-            //   style: TextStyle(
-            //     fontSize: 22,
-            //     fontWeight: FontWeight.bold,
-            //     color: Colors.yellow,
-            //   ),
-            // ),
+            const SizedBox(height: 20),
+            const Text(
+              "Hello from Tushandeep. This should be version = v0.1.1",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.yellow,
+              ),
+            ),
             const SizedBox(height: 20),
             Obx(
               () => Text(
