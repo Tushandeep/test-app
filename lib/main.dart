@@ -28,9 +28,7 @@ class MainApp extends StatelessWidget {
       home: Stack(
         children: [
           Positioned.fill(
-            child: Container(
-              color: Colors.transparent,
-            ),
+            child: Container(color: Colors.transparent),
           ),
           const HomePage(),
           UpdatWidget(
