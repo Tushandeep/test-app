@@ -74,8 +74,6 @@ class MainApp extends StatelessWidget {
             controller.updateStatus.value = status.name;
           });
         },
-        closeOnInstall: true,
-        openOnDownload: true,
         updateChipBuilder: floatingExtendedChipWithSilentDownload,
         child: const HomePage(),
       ),
