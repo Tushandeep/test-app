@@ -13,6 +13,8 @@ void main() async {
 
   _packageInfo = await PackageInfo.fromPlatform();
 
+  ErrorWidget.builder = (error) => Text(error.exception.toString());
+
   runApp(const MainApp());
 }
 
@@ -21,73 +23,101 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomePage(),
+    String updateStatus = "idle";
+    return MaterialApp(
+      home: UpdatWindowManager(
+        appName: _packageInfo.appName,
+        currentVersion: _packageInfo.version,
+        getBinaryUrl: (version) {
+          final binaryUrl =
+              "https://api.github.com/repos/Tushandeep/test-app/releases/download/$version/${Platform.operatingSystem}-$version.$platformExtension";
+
+          print("BinaryURL ------ $binaryUrl");
+
+          return Future.value(binaryUrl);
+        },
+        getLatestVersion: () async {
+          final Uri uri = Uri.parse("https://api.github.com/repos/Tushandeep/test-app/releases/latest");
+          final response = await http.get(uri);
+
+          final data = jsonDecode(response.body)['tag_name'];
+
+          print("LatestVersion ------ $data");
+
+          return data;
+        },
+        getChangelog: (_, __) async {
+          final Uri uri = Uri.parse("https://api.github.com/repos/Tushandeep/test-app/releases/latest");
+          final response = await http.get(uri);
+
+          final releaseNotes = jsonDecode(response.body)['body'];
+
+          print("Releases Notes ------ $releaseNotes");
+
+          return releaseNotes;
+        },
+        callback: (status) {
+          print(status);
+          updateStatus = status.name;
+        },
+        closeOnInstall: true,
+        child: HomePage(status: updateStatus),
+      ),
     );
   }
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({
+    super.key,
+    required this.status,
+  });
+
+  final String status;
 
   @override
   Widget build(BuildContext context) {
-    return UpdatWindowManager(
-      appName: _packageInfo.appName,
-      currentVersion: _packageInfo.version,
-      getBinaryUrl: (version) {
-        final binaryUrl =
-            "https://api.github.com/repos/Tushandeep/test-app/releases/download/$version/${Platform.operatingSystem}-$version.$platformExtension";
-
-        return Future.value(binaryUrl);
-      },
-      getLatestVersion: () async {
-        final Uri uri = Uri.parse("https://api.github.com/repos/Tushandeep/test-app/releases/latest");
-        final response = await http.get(uri);
-
-        return jsonDecode(response.body)['tag_name'];
-      },
-      getChangelog: (_, __) async {
-        final Uri uri = Uri.parse("https://api.github.com/repos/Tushandeep/test-app/releases/latest");
-        final response = await http.get(uri);
-
-        return jsonDecode(response.body)['body'];
-      },
-      callback: (status) => print(status),
-      closeOnInstall: true,
-      child: Scaffold(
-        backgroundColor: Colors.blue,
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Version: ${_packageInfo.version}",
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.red,
-                ),
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Version: ${_packageInfo.version}",
+              style: const TextStyle(
+                fontSize: 24,
+                color: Colors.red,
               ),
-              const SizedBox(height: 20),
-              Text(
-                "App Name: ${_packageInfo.appName}",
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.red,
-                ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              "App Name: ${_packageInfo.appName}",
+              style: const TextStyle(
+                fontSize: 24,
+                color: Colors.red,
               ),
-              const SizedBox(height: 20),
-              const Text(
-                "Hello from Tushandeep. This should be version = v0.1.1",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.yellow,
-                ),
-              )
-            ],
-          ),
+            ),
+            // const SizedBox(height: 20),
+            // const Text(
+            //   "Hello from Tushandeep. This should be version = v0.1.1",
+            //   style: TextStyle(
+            //     fontSize: 22,
+            //     fontWeight: FontWeight.bold,
+            //     color: Colors.yellow,
+            //   ),
+            // ),
+            const SizedBox(height: 20),
+            Text(
+              status.toUpperCase(),
+              style: const TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.1,
+                color: Colors.black,
+              ),
+            ),
+          ],
         ),
       ),
     );
