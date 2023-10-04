@@ -1,13 +1,9 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:updat/theme/chips/floating_with_silent_download.dart';
-import 'package:updat/updat_window_manager.dart';
-import 'package:http/http.dart' as http;
+import 'package:test_app/repositories/update_repository.dart';
+import 'package:updat/updat.dart';
 
 late PackageInfo _packageInfo;
 
@@ -27,59 +23,49 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppController controller = AppController.instance;
+    const UpdateRepository updateRepo = UpdateRepository();
     return MaterialApp(
-      home: UpdatWindowManager(
-        appName: _packageInfo.appName,
-        currentVersion: _packageInfo.version,
-        getBinaryUrl: (version) {
-          final binaryUrl =
-              "https://api.github.com/repos/Tushandeep/test-app/releases/download/$version/${Platform.operatingSystem}-$version.$platformExtension";
-
-          print("BinaryURL ------ $binaryUrl");
-          SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-            controller.binaryUrl.value = binaryUrl;
-          });
-
-          return Future.value(binaryUrl);
-        },
-        getLatestVersion: () async {
-          final Uri uri = Uri.parse("https://api.github.com/repos/Tushandeep/test-app/releases/latest");
-          final response = await http.get(uri);
-
-          final data = jsonDecode(response.body)['tag_name'];
-
-          print("LatestVersion ------ $data");
-          SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-            controller.tagName.value = data;
-          });
-
-          return data;
-        },
-        getChangelog: (_, __) async {
-          final Uri uri = Uri.parse("https://api.github.com/repos/Tushandeep/test-app/releases/latest");
-          final response = await http.get(uri);
-
-          final releaseNotes = jsonDecode(response.body)['body'];
-
-          print("Releases Notes ------ $releaseNotes");
-          SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-            controller.releaseNotes.value = releaseNotes;
-          });
-
-          return releaseNotes;
-        },
-        callback: (status) {
-          print(status);
-          SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-            controller.updateStatus.value = status.name;
-          });
-        },
-        updateChipBuilder: floatingExtendedChipWithSilentDownload,
-        child: const HomePage(),
+      home: Stack(
+        children: [
+          Positioned.fill(
+            child: Container(
+              color: Colors.transparent,
+            ),
+          ),
+          const HomePage(),
+          UpdatWidget(
+            appName: _packageInfo.appName,
+            currentVersion: _packageInfo.version,
+            getBinaryUrl: updateRepo.getBinaryUrl,
+            getLatestVersion: updateRepo.getLatestVersion,
+            getChangelog: updateRepo.getChangelog,
+            callback: (status) {
+              print(status);
+              SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                controller.updateStatus.value = status.name;
+              });
+            },
+            closeOnInstall: true,
+          ),
+        ],
       ),
     );
   }
 }
+
+// Widget showChipDialogFunction({
+//   required String appVersion,
+//   required void Function() checkForUpdate,
+//   required BuildContext context,
+//   required void Function() dismissUpdate,
+//   required String? latestVersion,
+//   required Future<void> Function() launchInstaller,
+//   required void Function() openDialog,
+//   required void Function() startUpdate,
+//   required UpdatStatus status,
+// }) {
+//   return
+// }
 
 class HomePage extends StatelessWidget {
   const HomePage({
@@ -158,19 +144,6 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-String get platformExtension {
-  switch (Platform.operatingSystem) {
-    case "windows":
-      return "exe";
-    case "macos":
-      return "dmg";
-    case "linux":
-      return "AppImage";
-    default:
-      return "zip";
   }
 }
 
