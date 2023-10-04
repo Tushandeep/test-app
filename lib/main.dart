@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:updat/theme/chips/floating_with_silent_download.dart';
 import 'package:updat/updat_window_manager.dart';
 import 'package:http/http.dart' as http;
 
@@ -35,6 +36,7 @@ class MainApp extends StatelessWidget {
               "https://api.github.com/repos/Tushandeep/test-app/releases/download/$version/${Platform.operatingSystem}-$version.$platformExtension";
 
           print("BinaryURL ------ $binaryUrl");
+          controller.binaryUrl.value = binaryUrl;
 
           return Future.value(binaryUrl);
         },
@@ -45,6 +47,7 @@ class MainApp extends StatelessWidget {
           final data = jsonDecode(response.body)['tag_name'];
 
           print("LatestVersion ------ $data");
+          controller.tagName.value = data;
 
           return data;
         },
@@ -55,6 +58,7 @@ class MainApp extends StatelessWidget {
           final releaseNotes = jsonDecode(response.body)['body'];
 
           print("Releases Notes ------ $releaseNotes");
+          controller.releaseNotes.value = releaseNotes;
 
           return releaseNotes;
         },
@@ -66,6 +70,7 @@ class MainApp extends StatelessWidget {
         },
         closeOnInstall: true,
         openOnDownload: true,
+        updateChipBuilder: floatingExtendedChipWithSilentDownload,
         child: const HomePage(),
       ),
     );
@@ -84,37 +89,28 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.blue,
       body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Version: ${_packageInfo.version}",
-              style: const TextStyle(
-                fontSize: 24,
-                color: Colors.red,
+        child: Obx(
+          () => Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Version: ${_packageInfo.version}",
+                style: const TextStyle(
+                  fontSize: 24,
+                  color: Colors.red,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              "App Name: ${_packageInfo.appName}",
-              style: const TextStyle(
-                fontSize: 24,
-                color: Colors.red,
+              const SizedBox(height: 20),
+              Text(
+                "App Name: ${_packageInfo.appName}",
+                style: const TextStyle(
+                  fontSize: 24,
+                  color: Colors.red,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              "Hello from Tushandeep. This should be version = v0.1.1",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.yellow,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Obx(
-              () => Text(
+              const SizedBox(height: 20),
+              Text(
                 controller.updateStatus.value.toUpperCase(),
                 style: const TextStyle(
                   fontSize: 25,
@@ -123,8 +119,38 @@ class HomePage extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 20),
+              Text(
+                "Binary URL: ${controller.binaryUrl.value}",
+                style: const TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.1,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                "Tag Name: ${controller.tagName.value.toUpperCase()}",
+                style: const TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.1,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                "Releases Notes: ${controller.releaseNotes.value}",
+                style: const TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.1,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -149,4 +175,7 @@ class AppController extends GetxController {
       Get.isRegistered<AppController>() ? Get.find<AppController>() : Get.put<AppController>(AppController());
 
   final RxString updateStatus = RxString('idle');
+  final RxString binaryUrl = RxString('');
+  final RxString tagName = RxString('');
+  final RxString releaseNotes = RxString('');
 }
