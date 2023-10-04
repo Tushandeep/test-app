@@ -93,7 +93,7 @@ class HomePage extends StatelessWidget {
     final AppController controller = AppController.instance;
 
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.amber,
       body: Center(
         child: Obx(
           () => Column(
