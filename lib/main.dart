@@ -56,6 +56,7 @@ class HomePage extends StatelessWidget {
       callback: (status) => print(status),
       closeOnInstall: true,
       child: Scaffold(
+        backgroundColor: Colors.blue,
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -76,6 +77,15 @@ class HomePage extends StatelessWidget {
                   color: Colors.red,
                 ),
               ),
+              const SizedBox(height: 20),
+              const Text(
+                "Hello from Tushandeep. This should be version = v0.1.1",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.yellow,
+                ),
+              )
             ],
           ),
         ),
