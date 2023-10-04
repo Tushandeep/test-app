@@ -36,7 +36,9 @@ class MainApp extends StatelessWidget {
               "https://api.github.com/repos/Tushandeep/test-app/releases/download/$version/${Platform.operatingSystem}-$version.$platformExtension";
 
           print("BinaryURL ------ $binaryUrl");
-          controller.binaryUrl.value = binaryUrl;
+          SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+            controller.binaryUrl.value = binaryUrl;
+          });
 
           return Future.value(binaryUrl);
         },
@@ -47,7 +49,9 @@ class MainApp extends StatelessWidget {
           final data = jsonDecode(response.body)['tag_name'];
 
           print("LatestVersion ------ $data");
-          controller.tagName.value = data;
+          SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+            controller.tagName.value = data;
+          });
 
           return data;
         },
@@ -58,7 +62,9 @@ class MainApp extends StatelessWidget {
           final releaseNotes = jsonDecode(response.body)['body'];
 
           print("Releases Notes ------ $releaseNotes");
-          controller.releaseNotes.value = releaseNotes;
+          SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+            controller.releaseNotes.value = releaseNotes;
+          });
 
           return releaseNotes;
         },
@@ -131,7 +137,7 @@ class HomePage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                "Tag Name: ${controller.tagName.value.toUpperCase()}",
+                "Tag Name: ${controller.tagName.value?.toUpperCase()}",
                 style: const TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -175,7 +181,7 @@ class AppController extends GetxController {
       Get.isRegistered<AppController>() ? Get.find<AppController>() : Get.put<AppController>(AppController());
 
   final RxString updateStatus = RxString('idle');
-  final RxString binaryUrl = RxString('');
-  final RxString tagName = RxString('');
-  final RxString releaseNotes = RxString('');
+  final Rx<String?> binaryUrl = Rx<String?>(null);
+  final Rx<String?> tagName = Rx<String?>(null);
+  final Rx<String?> releaseNotes = Rx<String?>(null);
 }
