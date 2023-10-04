@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:updat/updat_window_manager.dart';
 import 'package:http/http.dart' as http;
@@ -23,7 +25,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String updateStatus = "idle";
+    final AppController controller = AppController.instance;
     return MaterialApp(
       home: UpdatWindowManager(
         appName: _packageInfo.appName,
@@ -58,10 +60,13 @@ class MainApp extends StatelessWidget {
         },
         callback: (status) {
           print(status);
-          updateStatus = status.name;
+          SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+            controller.updateStatus.value = status.name;
+          });
         },
         closeOnInstall: true,
-        child: HomePage(status: updateStatus),
+        openOnDownload: true,
+        child: const HomePage(),
       ),
     );
   }
@@ -70,13 +75,12 @@ class MainApp extends StatelessWidget {
 class HomePage extends StatelessWidget {
   const HomePage({
     super.key,
-    required this.status,
   });
-
-  final String status;
 
   @override
   Widget build(BuildContext context) {
+    final AppController controller = AppController.instance;
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -108,13 +112,15 @@ class HomePage extends StatelessWidget {
             //   ),
             // ),
             const SizedBox(height: 20),
-            Text(
-              status.toUpperCase(),
-              style: const TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.1,
-                color: Colors.black,
+            Obx(
+              () => Text(
+                controller.updateStatus.value.toUpperCase(),
+                style: const TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.1,
+                  color: Colors.black,
+                ),
               ),
             ),
           ],
@@ -135,4 +141,11 @@ String get platformExtension {
     default:
       return "zip";
   }
+}
+
+class AppController extends GetxController {
+  static AppController instance =
+      Get.isRegistered<AppController>() ? Get.find<AppController>() : Get.put<AppController>(AppController());
+
+  final RxString updateStatus = RxString('idle');
 }
