@@ -51,20 +51,6 @@ class MainApp extends StatelessWidget {
   }
 }
 
-// Widget showChipDialogFunction({
-//   required String appVersion,
-//   required void Function() checkForUpdate,
-//   required BuildContext context,
-//   required void Function() dismissUpdate,
-//   required String? latestVersion,
-//   required Future<void> Function() launchInstaller,
-//   required void Function() openDialog,
-//   required void Function() startUpdate,
-//   required UpdatStatus status,
-// }) {
-//   return
-// }
-
 class HomePage extends StatelessWidget {
   const HomePage({
     super.key,
