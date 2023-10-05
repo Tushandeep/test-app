@@ -61,7 +61,7 @@ class HomePage extends StatelessWidget {
     final AppController controller = AppController.instance;
 
     return Scaffold(
-      backgroundColor: Colors.yellow,
+      backgroundColor: Colors.purple,
       body: Center(
         child: Obx(
           () => Column(
@@ -121,6 +121,13 @@ class HomePage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.1,
                   color: Colors.black,
+                ),
+              ),
+              const Text(
+                "Hello from Tushandeep Dev.",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
             ],
