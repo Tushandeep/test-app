@@ -65,7 +65,7 @@ class HomePage extends StatelessWidget {
     final ValueNotifier<String> versionListener = ValueNotifier<String>("N.A.");
 
     return Scaffold(
-      backgroundColor: Colors.purple,
+      backgroundColor: Colors.teal,
       body: Center(
         child: Stack(
           alignment: Alignment.center,
