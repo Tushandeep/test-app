@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
@@ -63,75 +65,73 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.purple,
       body: Center(
-        child: Obx(
-          () => Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Version: ${_packageInfo.version}",
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.red,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Positioned.fill(
+              child: Image.asset(
+                "assets/images/image1.jpeg",
+                fit: BoxFit.fill,
+                height: double.maxFinite,
+                width: double.maxFinite,
+              ),
+            ),
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6, tileMode: TileMode.decal),
+              child: Container(
+                height: 300,
+                width: 300,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(.3),
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Version: ${_packageInfo.version}",
+                      style: const TextStyle(
+                        fontSize: 24,
+                        color: Colors.red,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      "App Name: ${_packageInfo.appName}",
+                      style: const TextStyle(
+                        fontSize: 24,
+                        color: Colors.red,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Obx(
+                      () => Text(
+                        controller.updateStatus.value.toUpperCase(),
+                        style: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.1,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    const Text(
+                      "Hello from Tushandeep Dev.",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 20),
-              Text(
-                "App Name: ${_packageInfo.appName}",
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.red,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                controller.updateStatus.value.toUpperCase(),
-                style: const TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.1,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                "Binary URL: ${controller.binaryUrl.value}",
-                style: const TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.1,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                "Tag Name: ${controller.tagName.value?.toUpperCase()}",
-                style: const TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.1,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                "Releases Notes: ${controller.releaseNotes.value}",
-                style: const TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.1,
-                  color: Colors.black,
-                ),
-              ),
-              const Text(
-                "Hello from Tushandeep Dev.",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
