@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_app/repositories/update_repository.dart';
 import 'package:updat/updat.dart';
 
@@ -61,6 +62,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppController controller = AppController.instance;
+    final ValueNotifier<String> versionListener = ValueNotifier<String>("N.A.");
 
     return Scaffold(
       backgroundColor: Colors.purple,
@@ -79,8 +81,8 @@ class HomePage extends StatelessWidget {
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6, tileMode: TileMode.decal),
               child: Container(
-                height: 300,
-                width: 300,
+                height: 400,
+                width: 400,
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(.3),
                   border: Border.all(
@@ -125,6 +127,47 @@ class HomePage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    MaterialButton(
+                      onPressed: () async {
+                        final SharedPreferences prefs = await SharedPreferences.getInstance();
+                        await prefs.setString("key", _packageInfo.version);
+                      },
+                      color: Colors.red,
+                      child: const Text(
+                        "Set String",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    ListenableBuilder(
+                      listenable: versionListener,
+                      builder: (context, _) => Text(
+                        "Previous Version: ${versionListener.value}",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    MaterialButton(
+                      onPressed: () async {
+                        final SharedPreferences prefs = await SharedPreferences.getInstance();
+                        versionListener.value = prefs.getString("key") ?? "N.A.";
+                      },
+                      color: Colors.red,
+                      child: const Text(
+                        "Get String",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ],
