@@ -324,7 +324,7 @@ class _SettingsPopupDialogState extends State<SettingsPopupDialog> with SingleTi
                                 );
                               } else if (status == UpdaterStatus.error) {
                                 widget = ElevatedButton(
-                                  onPressed: updaterController.startUpdate,
+                                  onPressed: updaterController.retry,
                                   style: ElevatedButton.styleFrom(
                                     elevation: 2,
                                     shape: RoundedRectangleBorder(

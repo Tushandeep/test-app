@@ -17,6 +17,7 @@ class UpdaterController extends GetxController {
       : Get.put<UpdaterController>(UpdaterController());
 
   final Rx<UpdaterStatus> status = Rx<UpdaterStatus>(UpdaterStatus.idle);
+  UpdaterStatus? _previousStatus;
 
   /// Store these Variables in the .env File.
   late String _username, _repoName;
@@ -92,6 +93,7 @@ class UpdaterController extends GetxController {
         }
       }
     } catch (err) {
+      _previousStatus = status.value;
       status.value = UpdaterStatus.error;
     }
   }
@@ -109,7 +111,7 @@ class UpdaterController extends GetxController {
     });
   }
 
-  void startUpdate() async {
+  Future<void> startUpdate() async {
     if (latestVersion.value == null) return;
 
     status.value = UpdaterStatus.downloading;
@@ -129,18 +131,33 @@ class UpdaterController extends GetxController {
           (progress) => this.progress.value = progress,
         );
       } catch (e) {
+        _previousStatus = status.value;
         status.value = UpdaterStatus.error;
-
         return;
       }
 
       status.value = UpdaterStatus.readyToInstall;
     } else {
+      _previousStatus = status.value;
       status.value = UpdaterStatus.error;
 
       Future.delayed(const Duration(seconds: 1), () {
         status.value = UpdaterStatus.upToDate;
       });
+    }
+  }
+
+  Future<void> retry() async {
+    if (_previousStatus != null) {
+      if (_previousStatus == UpdaterStatus.readyToInstall) {
+        await launchInstaller();
+        return;
+      }
+
+      if (_previousStatus == UpdaterStatus.downloading) {
+        await startUpdate();
+        return;
+      }
     }
   }
 
@@ -165,7 +182,7 @@ class UpdaterController extends GetxController {
 
       jsonData.add({
         "version": latestVersion.value.toString(),
-        "notes": jsonDecode(releaseNotes.value ?? ""),
+        "notes": releaseNotes.value,
       });
 
       final String newData = jsonEncode(jsonData);
@@ -174,9 +191,8 @@ class UpdaterController extends GetxController {
       await _updaterRepo.openInstaller(_savedPath.value!);
       exit(0);
     } catch (e) {
+      _previousStatus = status.value;
       status.value = UpdaterStatus.error;
-      await Future.delayed(const Duration(seconds: 1));
-      status.value = UpdaterStatus.readyToInstall;
     }
   }
 
