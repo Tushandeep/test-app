@@ -164,7 +164,7 @@ class UpdaterController extends GetxController {
 
       jsonData.addAll({
         "version": latestVersion.value.toString(),
-        "notes": releaseNotes.value,
+        "notes": jsonDecode(releaseNotes.value ?? ""),
       });
 
       final String newData = jsonEncode(jsonData);
