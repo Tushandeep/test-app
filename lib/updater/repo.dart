@@ -73,7 +73,7 @@ class UpdaterRepo {
 
   Future<void> _openUri(Uri uri) async {
     if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       throw "Error";
     }

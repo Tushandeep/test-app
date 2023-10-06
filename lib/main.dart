@@ -282,9 +282,9 @@ class _SettingsPopupDialogState extends State<SettingsPopupDialog> with SingleTi
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Text(
+                                    Text(
                                       "Update Available",
-                                      style: style,
+                                      style: style.copyWith(fontWeight: FontWeight.w500),
                                     ),
                                     const SizedBox(height: 2),
                                     Text.rich(
@@ -304,40 +304,16 @@ class _SettingsPopupDialogState extends State<SettingsPopupDialog> with SingleTi
                                       ),
                                     ),
                                     const SizedBox(height: 4),
-                                    ElevatedButton(
+                                    PopUpTile(
+                                      title: "Update",
                                       onPressed: updaterController.startUpdate,
-                                      style: ElevatedButton.styleFrom(
-                                        elevation: 2,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(2),
-                                        ),
-                                        backgroundColor: Colors.greenAccent,
-                                      ),
-                                      child: Text(
-                                        "Update",
-                                        style: style.copyWith(
-                                          color: Colors.white,
-                                        ),
-                                      ),
                                     ),
                                   ],
                                 );
                               } else if (status == UpdaterStatus.error) {
-                                widget = ElevatedButton(
+                                widget = PopUpTile(
+                                  title: "Retry",
                                   onPressed: updaterController.retry,
-                                  style: ElevatedButton.styleFrom(
-                                    elevation: 2,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(2),
-                                    ),
-                                    backgroundColor: Colors.greenAccent,
-                                  ),
-                                  child: Text(
-                                    "Retry",
-                                    style: style.copyWith(
-                                      color: Colors.white,
-                                    ),
-                                  ),
                                 );
                               } else if ([
                                 UpdaterStatus.upToDate,
@@ -374,9 +350,12 @@ class _SettingsPopupDialogState extends State<SettingsPopupDialog> with SingleTi
                                       thickness: .2,
                                       height: 0,
                                     ),
-                                    const SizedBox(height: 2),
+                                    const SizedBox(height: 6),
                                     PopUpTile(
                                       title: "Release Notes",
+                                      textAlign: Alignment.center,
+                                      backgroundColor: Colors.greenAccent.shade200,
+                                      highlightColor: Colors.greenAccent.shade400,
                                       onPressed: () {
                                         showDialog(
                                           context: context,
@@ -396,49 +375,43 @@ class _SettingsPopupDialogState extends State<SettingsPopupDialog> with SingleTi
                                   ],
                                 );
                               } else if (status == UpdaterStatus.readyToInstall) {
-                                widget = Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Text(
-                                      "Install Update",
-                                      style: style,
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Text.rich(
-                                      TextSpan(
+                                widget = Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 4,
+                                    horizontal: 8,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Row(
                                         children: [
-                                          const TextSpan(
-                                            text: "New Version: ",
-                                            style: style,
+                                          Text(
+                                            "Install Update",
+                                            style: style.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                           ),
-                                          TextSpan(
-                                            text: latestVersion,
+                                          const Spacer(),
+                                          Text(
+                                            latestVersion,
                                             style: style.copyWith(
                                               color: Colors.red,
+                                              fontWeight: FontWeight.w800,
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    ElevatedButton(
-                                      onPressed: updaterController.launchInstaller,
-                                      style: ElevatedButton.styleFrom(
-                                        elevation: 2,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(2),
-                                        ),
-                                        backgroundColor: Colors.greenAccent,
+                                      const SizedBox(height: 4),
+                                      PopUpTile(
+                                        title: "Install Now",
+                                        textAlign: Alignment.center,
+                                        backgroundColor: Colors.greenAccent.shade200,
+                                        highlightColor: Colors.greenAccent.shade400,
+                                        onPressed: updaterController.launchInstaller,
                                       ),
-                                      child: Text(
-                                        "Install now",
-                                        style: style.copyWith(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 );
                               } else if (status == UpdaterStatus.downloading) {
                                 widget = Row(
@@ -448,7 +421,9 @@ class _SettingsPopupDialogState extends State<SettingsPopupDialog> with SingleTi
                                       width: 30,
                                       child: CircularProgressIndicator.adaptive(
                                         strokeWidth: 2,
-                                        value: updaterController.progress.value * 1.0,
+                                        value: (updaterController.progress.value != null)
+                                            ? updaterController.progress.value! * 1.0
+                                            : null,
                                       ),
                                     ),
                                     const SizedBox(width: 6),
@@ -496,24 +471,31 @@ class PopUpTile extends StatelessWidget {
   const PopUpTile({
     super.key,
     required this.title,
+    this.textAlign = Alignment.centerLeft,
     required this.onPressed,
+    this.backgroundColor,
+    this.highlightColor,
   });
 
   final String title;
+  final AlignmentGeometry textAlign;
+  final Color? backgroundColor, highlightColor;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      borderRadius: BorderRadius.circular(4),
       child: InkWell(
         onTap: onPressed,
-        overlayColor: const MaterialStatePropertyAll(Colors.black12),
+        autofocus: true,
         borderRadius: BorderRadius.circular(4),
+        focusColor: backgroundColor,
+        hoverColor: highlightColor,
+        highlightColor: highlightColor,
         child: Container(
           height: 30,
           padding: const EdgeInsets.symmetric(horizontal: 6),
-          alignment: Alignment.centerLeft,
+          alignment: textAlign,
           child: Text(
             title,
             style: const TextStyle(

@@ -30,7 +30,7 @@ class UpdaterController extends GetxController {
   late Directory _supportDir;
 
   /// Progress about the Release Download...
-  final RxInt progress = RxInt(0);
+  final Rx<int?> progress = Rx<int?>(null);
 
   /// Package Info
   late PackageInfo _packageInfo;
