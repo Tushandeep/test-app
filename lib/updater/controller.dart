@@ -189,7 +189,7 @@ class UpdaterController extends GetxController {
       notesFile.writeAsStringSync(newData);
 
       await _updaterRepo.openInstaller(_savedPath.value!);
-      exit(0);
+      // exit(0);
     } catch (e) {
       _previousStatus = status.value;
       status.value = UpdaterStatus.error;

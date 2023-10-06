@@ -75,11 +75,16 @@ class UpdaterRepo {
 
   Future<void> _openUri(Uri uri) async {
     if (Platform.isWindows) {
-      await Process.run(
-        uri.toString(),
-        ["/S", "/v/qn"],
-        runInShell: true,
-      );
+      try {
+        final ProcessResult result = await Process.run(
+          uri.toString(),
+          ["/S", "/v/qn"],
+        );
+
+        print(result.exitCode);
+      } catch (err) {
+        rethrow;
+      }
     }
 
     // if (await canLaunchUrl(uri)) {
