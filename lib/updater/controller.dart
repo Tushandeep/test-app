@@ -156,13 +156,14 @@ class UpdaterController extends GetxController {
 
       if (!notesFile.existsSync()) {
         notesFile.createSync(recursive: true);
+        notesFile.writeAsStringSync(jsonEncode([]));
       }
 
       // Get the Data.
       final String data = notesFile.readAsStringSync();
-      final Map<String, dynamic> jsonData = jsonDecode(data);
+      final List<dynamic> jsonData = jsonDecode(data);
 
-      jsonData.addAll({
+      jsonData.add({
         "version": latestVersion.value.toString(),
         "notes": jsonDecode(releaseNotes.value ?? ""),
       });
