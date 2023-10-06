@@ -173,7 +173,7 @@ class UpdaterController extends GetxController {
       await _updaterRepo.openInstaller(_savedPath.value!);
       exit(0);
     } catch (e) {
-      status.value = UpdaterStatus.dismissed;
+      status.value = UpdaterStatus.error;
       await Future.delayed(const Duration(seconds: 1));
       status.value = UpdaterStatus.readyToInstall;
     }
