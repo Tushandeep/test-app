@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:test_app/updater/typedef.dart';
-// import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UpdaterRepo {
   late dio.Dio _dio;
@@ -74,23 +72,10 @@ class UpdaterRepo {
   }
 
   Future<void> _openUri(Uri uri) async {
-    if (Platform.isWindows) {
-      try {
-        final ProcessResult result = await Process.run(
-          uri.toString(),
-          ["/S", "/v/qn"],
-        );
-
-        print(result.exitCode);
-      } catch (err) {
-        rethrow;
-      }
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.platformDefault);
+    } else {
+      throw "Error";
     }
-
-    // if (await canLaunchUrl(uri)) {
-    //   await launchUrl(uri, mode: LaunchMode.externalApplication);
-    // } else {
-    //   throw "Error";
-    // }
   }
 }
