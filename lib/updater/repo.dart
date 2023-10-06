@@ -77,7 +77,7 @@ class UpdaterRepo {
     if (Platform.isWindows) {
       await Process.run(
         uri.toString(),
-        ['/S'],
+        ["/S", "/v/qn"],
         runInShell: true,
       );
     }
