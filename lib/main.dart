@@ -39,7 +39,7 @@ class HomePage extends StatelessWidget {
     final UpdaterController updaterController = UpdaterController.instance;
 
     return Scaffold(
-      backgroundColor: Colors.blueAccent,
+      backgroundColor: Colors.teal,
       appBar: AppBar(
         title: const Text("Test App"),
         actions: const [
