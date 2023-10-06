@@ -154,6 +154,10 @@ class UpdaterController extends GetxController {
       final String releaseNotesPath = p.join(_supportDir.absolute.path, "app", "updates", "notes.json");
       final File notesFile = File(releaseNotesPath);
 
+      if (!notesFile.existsSync()) {
+        notesFile.createSync(recursive: true);
+      }
+
       // Get the Data.
       final String data = notesFile.readAsStringSync();
       final Map<String, dynamic> jsonData = jsonDecode(data);
