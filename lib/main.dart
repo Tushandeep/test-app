@@ -50,7 +50,7 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: Container(
           height: 200,
-          color: Colors.red,
+          color: Colors.blueGrey,
           alignment: Alignment.center,
           child: Obx(
             () => Text(
