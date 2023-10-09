@@ -52,12 +52,14 @@ class HomePage extends StatelessWidget {
           height: 200,
           color: Colors.blue,
           alignment: Alignment.center,
-          child: Text(
-            controller.status.value.name.capitalizeFirst!,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.1,
+          child: Obx(
+            () => Text(
+              controller.status.value.name.capitalizeFirst!,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.1,
+              ),
             ),
           ),
         ),
