@@ -36,8 +36,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UpdaterController updaterController = UpdaterController.instance;
-
     return Scaffold(
       backgroundColor: Colors.teal,
       appBar: AppBar(
@@ -48,55 +46,10 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Positioned.fill(
-              child: Image.asset(
-                "assets/images/image1.jpeg",
-                fit: BoxFit.fill,
-                height: double.maxFinite,
-                width: double.maxFinite,
-              ),
-            ),
-            Container(
-              height: 400,
-              width: 400,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(.3),
-                border: Border.all(
-                  color: Colors.white,
-                  width: 2,
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Obx(
-                () => Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Current Version: ${updaterController.currentVersion.value}",
-                      style: const TextStyle(
-                        fontSize: 24,
-                        color: Colors.red,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      updaterController.status.value.name.toUpperCase(),
-                      style: const TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.1,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+        child: Container(
+          height: 200,
+          width: 200,
+          color: Colors.red,
         ),
       ),
     );
