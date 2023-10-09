@@ -150,11 +150,13 @@ class UpdaterController extends GetxController {
   Future<void> retry() async {
     if (_previousStatus != null) {
       if (_previousStatus == UpdaterStatus.readyToInstall) {
+        status.value = _previousStatus!;
         await launchInstaller();
         return;
       }
 
       if (_previousStatus == UpdaterStatus.downloading) {
+        status.value = _previousStatus!;
         await startUpdate();
         return;
       }

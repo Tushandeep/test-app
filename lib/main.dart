@@ -36,6 +36,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UpdaterController controller = UpdaterController.instance;
     return Scaffold(
       backgroundColor: Colors.tealAccent,
       appBar: AppBar(
@@ -49,8 +50,16 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: Container(
           height: 200,
-          width: 200,
           color: Colors.blue,
+          alignment: Alignment.center,
+          child: Text(
+            controller.status.value.name.capitalizeFirst!,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.1,
+            ),
+          ),
         ),
       ),
     );
