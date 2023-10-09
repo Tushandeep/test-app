@@ -50,7 +50,7 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: Container(
           height: 200,
-          color: Colors.blue,
+          color: Colors.red,
           alignment: Alignment.center,
           child: Obx(
             () => Text(
@@ -58,6 +58,7 @@ class HomePage extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+                color: Colors.white,
                 letterSpacing: 1.1,
               ),
             ),
