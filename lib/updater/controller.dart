@@ -194,7 +194,7 @@ class UpdaterController extends GetxController {
         _savedPath.value!,
         _packageInfo.appName,
       );
-      // exit(0);
+      exit(0);
     } catch (e) {
       _previousStatus = status.value;
       status.value = UpdaterStatus.error;
