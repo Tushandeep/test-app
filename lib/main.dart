@@ -37,8 +37,9 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal,
+      backgroundColor: Colors.tealAccent,
       appBar: AppBar(
+        backgroundColor: Colors.amberAccent,
         title: const Text("Test App"),
         actions: const [
           AppBarSettingsAction(),

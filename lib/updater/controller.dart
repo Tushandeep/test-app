@@ -188,7 +188,10 @@ class UpdaterController extends GetxController {
       final String newData = jsonEncode(jsonData);
       notesFile.writeAsStringSync(newData);
 
-      await _updaterRepo.openInstaller(_savedPath.value!);
+      await _updaterRepo.openInstaller(
+        _savedPath.value!,
+        _packageInfo.appName,
+      );
       // exit(0);
     } catch (e) {
       _previousStatus = status.value;
